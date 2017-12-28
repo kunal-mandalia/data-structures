@@ -1,21 +1,32 @@
 /**
- * 
+ * A util class to get the key given value
+ * of a js Object
  * @param {Object} mappings (key, value)
  */
-// todo: memoise inverse lookup
-const bijective = (mappings) => {
-  const value = (d) => {
-    return mappings[d]
+const isObject = obj => Object.prototype.toString.call(obj) === '[object Object]'
+
+class Bijective {
+  constructor (mappings) {
+    if (!isObject(mappings)) {
+      throw new Error(`Bijective should be initialised with object. Received ${mappings}`)
+    } 
+    this.mappings = mappings
+    this.inverseMappings = this.getInverseMappings(mappings)
+    this.getValue = this.getValue.bind(this)
+    this.getInverse = this.getInverse.bind(this)
   }
 
-  const inverse = (r) => {
-    return Object.keys(mappings).find(key => mappings[key] === r)
+  getInverseMappings (mappings) {
+    return Object.keys(mappings).reduce((acc, key) => {
+      acc[mappings[key]] = key
+      return acc
+    }, {})
   }
 
-  return {
-    value,
-    inverse
-  }
+  getValue (key) { return this.mappings[key] }
+
+  getInverse (value) { return this.inverseMappings[value] }
+
 }
 
-module.exports = bijective
+module.exports = Bijective
