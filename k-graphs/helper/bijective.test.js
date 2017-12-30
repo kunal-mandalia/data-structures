@@ -3,15 +3,30 @@ const Bijective = require('./bijective')
 describe(`bijective helper lib`, () => {
   describe('bad constructor', () => {
     const errorMappings = [
-      [1, 2, 3],
       'abc',
-      123
+      123,
     ]
     it(`should throw when constructor is not an object`, () => {
       errorMappings.forEach(c => {
         expect(() => { const bijectiveMappings = new Bijective(c) }).toThrow()
       })
-    })    
+    })
+  })
+
+  describe('array constructor arg', () => {
+    const mappings = ['a', 'b', 'c']
+    const fn = new Bijective(mappings)
+    it(`should normalise mappings`, () => {
+      expect(Object.prototype.toString.call(fn.mappings)).toEqual('[object Object]')
+    })
+
+    it(`should get correct value`, () => {
+      expect(fn.getValue('b')).toEqual(1)
+    })
+
+    it(`should get correct inverse value`, () => {
+      expect(fn.getInverse(1)).toEqual('b')
+    })
   })
 
   describe('inverting function', () => {
