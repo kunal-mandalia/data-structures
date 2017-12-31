@@ -36,6 +36,8 @@ class Bijective {
    * 
    * @param {Object} mappings 
    */
+  // since labels are arrays, why not use labels.indexOf
+  // to find inverse
   getInverseMappings (mappings) {
     return Object.keys(mappings).reduce((acc, key) => {
       acc[mappings[key]] = key
