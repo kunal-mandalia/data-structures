@@ -7,8 +7,8 @@ class Kgraph {
    * @param {Array} newIndices [Number]
    * @returns {Array} matrix containing empty rows/columns at new indices
    */
-  static insertEmptyRowsColumns (matrix, newIndices) {
-    let expandedMatrix = matrix
+  static expandMatrix (matrix, newIndices) {
+    let expandedMatrix = matrix.slice()
     const size = matrix.length + newIndices.length
     let emptyRow = new Array(size).fill(0)
     // columns
@@ -23,33 +23,25 @@ class Kgraph {
   }
 
   /**
-   * 
-   * @param {Array} nodes 
-   */
-  static sortNodes (nodes) {
-    return nodes.sort((a,b) => a > b)
-  }
-
-  /**
    * Expand matrix, labels, nodes, fn
    * @param {Kgraph}
    * @param {Array} additionalLabels 
    * @param {Function} sortNodes
    * @returns {Kgraph}
    */
-  static expand (kgraph, additionalLabels, sortNodes = Kgraph.sortNodes) {
-    let matrix, labels
-    // matrix = kgraph.state.matrix
-    labels = sortNodes(Array.from(new Set(kgraph.state.labels.concat(additionalLabels))))
-    // const newIndices = labels.filter((l, i) => )
-    matrix = [
-      [0, 0, 1, 0, 1],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [1, 0, 0, 0, 0],
-    ]
+  static expandGraph (kgraph, additionalLabels, sortNodes = Kgraph.sortNodes) {
+    const labels = sortNodes(Array.from(new Set(kgraph.state.labels.concat(additionalLabels))))
+    const newIndices = additionalLabels.map(l => labels.indexOf(l))
+    const matrix = Kgraph.expandMatrix(kgraph.state.matrix, newIndices)
     return new Kgraph(matrix, labels)
+  }
+
+  /**
+   * 
+   * @param {Array} nodes 
+   */
+  static sortNodes (nodes) {
+    return nodes.sort((a,b) => a > b)
   }
 
   static join (graphA, graphB) {
